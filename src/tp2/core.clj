@@ -1,6 +1,7 @@
 (ns tp2.core
   (:gen-class)
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as str]))
 
 (defn validate-reading-file [file-path]
   (let [f (io/file file-path)]
@@ -53,16 +54,30 @@
       false
       :else true)))
 
-(defn read-file [file-path]
-  (with-open [rdr (io/reader file-path)]
-    (doall (line-seq rdr))))
+(defn parse-system-l [lines]
+  (let [angle (Double/parseDouble (first lines))
+        axiom (second lines)
+        rules (->> (drop 2 lines)
+                   (map #(str/split % #"\s+" 2))
+                   (into {}))]
+    {:angle angle
+     :axiom axiom
+     :rules rules}))
+
+(defn read-system-l [file-path]
+  (let [lines (with-open [rdr (io/reader file-path)]
+                (doall (line-seq rdr)))]
+    (parse-system-l lines)))
 
 (defn -main
   [& args]
-  (if (= (validate-args args) false)
+  (if (not (validate-args args))
     (System/exit 1)
     (let [input-file (nth args 0)
           iterations (Integer/parseInt (nth args 1))
           output-file (nth args 2)
-          data (read-file input-file)]
-      (println "data: " data))))
+          system-l (read-system-l input-file)]
+      (println "Sistema L cargado:")
+      (println "Ángulo:" (:angle system-l))
+      (println "Axioma:" (:axiom system-l))
+      (println "Reglas:" (:rules system-l)))))
