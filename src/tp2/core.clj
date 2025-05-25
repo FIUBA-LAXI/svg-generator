@@ -1,7 +1,9 @@
 (ns tp2.core
   (:gen-class)
   (:require [clojure.java.io :as io]
-            [tp2.parser :as parser]))
+            [tp2.parser :as parser]
+            [tp2.lsystem :as lsystem]
+            [tp2.turtle :as turtle]))                     ; lo agrego
 
 (defn validate-reading-file [file-path]
   (let [f (io/file file-path)]
@@ -61,8 +63,16 @@
     (let [input-file (nth args 0)
           iterations (Integer/parseInt (nth args 1))
           output-file (nth args 2)
-          system-l (parser/read-system-l input-file)]
+          system-l (parser/read-system-l input-file)
+          expanded (lsystem/expand-system-l (:axiom system-l)
+                                            (:rules system-l)
+                                            iterations)
+      lineas (turtle/interpretar expanded (:angle system-l))]  ; con turtle
       (println "Sistema L cargado:")
       (println "Ángulo:" (:angle system-l))
       (println "Axioma:" (:axiom system-l))
-      (println "Reglas:" (:rules system-l)))))
+      (println "Reglas:" (:rules system-l))
+      (println "Cadena expandida:")
+      (println expanded)
+      (println "Cantidad de líneas generadas por turtle:" (count lineas))
+      )))
