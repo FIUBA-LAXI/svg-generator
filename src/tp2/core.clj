@@ -28,6 +28,13 @@
         (println "Error: el valor no es un número entero.")
         false))))
 
+(defn validate-writing-file [file-path]
+  (if (.endsWith file-path ".svg")
+    true
+    (do
+      (println "Error: el archivo de salida debe tener la extensión .svg.")
+      false)))
+
 (defn validate-args [args]
   (if (= (count args) 3)
     true
@@ -41,6 +48,8 @@
       (not (validate-reading-file input-file))
       false
       (not (validate-integer iterations))
+      false
+      (not (validate-writing-file output-file))
       false
       :else true)))
 
