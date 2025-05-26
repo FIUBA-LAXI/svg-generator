@@ -3,7 +3,8 @@
   (:require [clojure.java.io :as io]
             [tp2.parser :as parser]
             [tp2.lsystem :as lsystem]
-            [tp2.turtle :as turtle]))                     ; lo agrego
+            [tp2.turtle :as turtle]
+            [tp2.svg :as svg]))
 
 (defn validate-reading-file [file-path]
   (let [f (io/file file-path)]
@@ -75,4 +76,8 @@
       (println "Cadena expandida:")
       (println expanded)
       (println "Cantidad de líneas generadas por turtle:" (count lineas))
+      (let [extremos (:extremos lineas)]
+        (svg/write-svg-file output-file
+                            (:lineas lineas)
+                            extremos))
       )))
