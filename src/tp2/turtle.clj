@@ -4,7 +4,7 @@
 (defn interpretar [cadena angulo]
   (let [rads (fn [deg] (* (/ Math/PI 180) deg))]
     (loop [xs []                                      ;; líneas acumuladas
-           estado {:x 0.0 :y 0.0 :dir 0.0}            ;; estado actual de la tortuga
+           estado {:x 0.0 :y 0.0 :dir -90.0}            ;; estado actual de la tortuga
            pila []                                    ;; pila de estados
            extremos {:min-x 0.0 :max-x 0.0
                      :min-y 0.0 :max-y 0.0}           ;; extremos

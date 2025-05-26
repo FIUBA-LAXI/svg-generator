@@ -11,16 +11,14 @@
          "<svg xmlns=\"http://www.w3.org/2000/svg\"\n"
          "     width=\"" width "\" height=\"" height "\"\n"
          "     viewBox=\"" min-x " " min-y " " width " " height "\">\n"
-         "<path d=\"M "
          (apply str
-                (interpose " L "
-                           (map (fn [[start end]]
-                                  (let [[x1 y1] start
-                                        [x2 y2] end]
-                                    (str x1 " " y1)))
-                                lineas)))
-         "\" style=\"stroke:black;stroke-width:1;fill:none;\"/>\n"
+                (map (fn [[[x1 y1] [x2 y2]]]
+                       (str "<line x1=\"" x1 "\" y1=\"" y1
+                            "\" x2=\"" x2 "\" y2=\"" y2
+                            "\" stroke=\"black\" stroke-width=\"0.1\" stroke-linecap=\"round\" />\n"))
+                     lineas))
          "</svg>")))
+
 
 (defn write-svg-file [file-path lineas extremos]
   (let [svg-content (generate-svg lineas extremos)]
