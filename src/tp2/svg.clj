@@ -1,24 +1,31 @@
-(ns tp2.svg)
+(ns tp2.svg
+  (:require [clojure.pprint :refer [cl-format]]))
 
-"
- Dentro del atributo d usamos los comandos M x y para movernos a las coordenadas (x, y) y L x y para movernos dibujando una línea recta:\n\n<svg viewBox=\"-50 -150 300 200\" xmlns=\"http://www.w3.org/2000/svg\">\n  <path d=\"M 0 0 L 200 0 L 200 -100 M 100 -100 L 0 -100\" stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>\n</svg>\n
-"
 (defn generate-svg [lineas extremos]
-  (let [{:keys [min-x max-x min-y max-y]} extremos
-        width (- max-x min-x)
-        height (- max-y min-y)]
-    (str "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-         "<svg xmlns=\"http://www.w3.org/2000/svg\"\n"
-         "     width=\"" width "\" height=\"" height "\"\n"
-         "     viewBox=\"" min-x " " min-y " " width " " height "\">\n"
-         (apply str
-                (map (fn [[[x1 y1] [x2 y2]]]
-                       (str "<line x1=\"" x1 "\" y1=\"" y1
-                            "\" x2=\"" x2 "\" y2=\"" y2
-                            "\" stroke=\"black\" stroke-width=\"0.1\" stroke-linecap=\"round\" />\n"))
-                     lineas))
+  (let [padding-ratio 0.1
+        {:keys [min-x max-x min-y max-y]} extremos
+        view-width  (- max-x min-x)
+        view-height (- max-y min-y)
+        padding-x (* view-width padding-ratio)
+        padding-y (* view-height padding-ratio)
+        view-min-x (- min-x padding-x)
+        view-min-y (- min-y padding-y)
+        view-box-width (+ view-width (* 2 padding-x))
+        view-box-height (+ view-height (* 2 padding-y))
+        ;; Convertimos las líneas en comandos de path:
+        path-str (apply str
+                        (map (fn [[[x1 y1] [x2 y2]]]
+                               (str "M " (cl-format nil "~,4F" x1) " " (cl-format nil "~,4F" y1)
+                                    " L " (cl-format nil "~,4F" x2) " " (cl-format nil "~,4F" y2) " "))
+                             lineas))]
+    (str "<svg viewBox=\""
+         view-min-x " "
+         view-min-y " "
+         view-box-width " "
+         view-box-height
+         "\" xmlns=\"http://www.w3.org/2000/svg\">"
+         "<path d=\"" path-str "\" stroke-width=\"1\" stroke=\"black\" fill=\"none\"/>"
          "</svg>")))
-
 
 (defn write-svg-file [file-path lineas extremos]
   (let [svg-content (generate-svg lineas extremos)]

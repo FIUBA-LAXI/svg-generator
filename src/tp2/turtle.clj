@@ -21,9 +21,9 @@
                  :max-y (max (:max-y ext) y)})]
           (case c
             (\F \G)
-            (let [x2 (+ x (Math/cos θ))
-                  y2 (+ y (Math/sin θ))
-                  nuevos-extremos (-> extremos
+            (let [x2 (+ x (* 10.0 (Math/cos θ))) ;; Multiplicamos por 10.0 para dar un paso más largo
+                  y2 (+ y (* 10.0 (Math/sin θ)))
+                   nuevos-extremos (-> extremos
                                       (actualizar-extremos x2 y2))]
               (recur (conj xs [[x y] [x2 y2]])
                      {:x x2 :y y2 :dir dir}
@@ -32,9 +32,9 @@
                      cs))
 
             (\f \g)
-            (let [x2 (+ x (Math/cos θ))
-                  y2 (+ y (Math/sin θ))
-                  nuevos-extremos (-> extremos
+            (let [x2 (+ x (* 10.0 (Math/cos θ)))
+                  y2 (+ y (* 10.0 (Math/sin θ)))
+                   nuevos-extremos (-> extremos
                                       (actualizar-extremos x2 y2))]
               (recur xs
                      {:x x2 :y y2 :dir dir}
