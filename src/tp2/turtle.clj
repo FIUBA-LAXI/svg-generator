@@ -27,7 +27,7 @@
      :extremos nuevos-extremos}))
 
 ;; Interpreta una cadena de comandos tipo L-system
-(defn interpretar [cadena angulo]
+(defn interpretar [cadena angle-left angle-right]
   (loop [xs []
          estado {:x 0.0 :y 0.0 :dir -90.0}
          pila []
@@ -45,10 +45,10 @@
           (recur xs estado pila extremos cs))
 
         \+
-        (recur xs (update estado :dir #(+ % angulo)) pila extremos cs)
+        (recur xs (update estado :dir #(+ % angle-right)) pila extremos cs)
 
         \-
-        (recur xs (update estado :dir #(- % angulo)) pila extremos cs)
+        (recur xs (update estado :dir #(- % angle-left)) pila extremos cs)
 
         \|
         (recur xs (update estado :dir #(+ % 180)) pila extremos cs)

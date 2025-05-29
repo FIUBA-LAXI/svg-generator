@@ -84,9 +84,10 @@
           expanded (lsystem/expand-system-l (:axiom system-l)
                                             (:rules system-l)
                                             iterations)
-          lineas (turtle/interpretar expanded (:angle system-l))]
+          lineas (turtle/interpretar expanded (:angle-left system-l) (:angle-right system-l))]
       (println "Sistema L cargado:")
-      (println "Ángulo:" (:angle system-l))
+      (println "Ángulo izquierda:" (:angle-left system-l))
+      (println "Ángulo derecha:" (:angle-right system-l))
       (println "Axioma:" (:axiom system-l))
       (println "Reglas:" (:rules system-l))
       (println "Cadena expandida:")

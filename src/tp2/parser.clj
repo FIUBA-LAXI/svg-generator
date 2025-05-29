@@ -2,13 +2,22 @@
   (:require [clojure.string :as str]
             [clojure.java.io :as io]))
 
+(defn parse-angle [line]
+  (let [parts (clojure.string/split line #"[ ,]+")
+        ang1 (Double/parseDouble (first parts))
+        ang2 (if (> (count parts) 1)
+               (Double/parseDouble (second parts))
+               ang1)] ; si no hay segundo ángulo, se usa el mismo
+    {:angle-left ang1 :angle-right ang2}))
+
 (defn parse-system-l [lines]
-  (let [angle (Double/parseDouble (first lines))
+  (let [{:keys [angle-left angle-right]} (parse-angle (first lines))
         axiom (second lines)
         rules (->> (drop 2 lines)
                    (map #(str/split % #"\s+" 2))
                    (into {}))]
-    {:angle angle
+    {:angle-left angle-left
+     :angle-right angle-right
      :axiom axiom
      :rules rules}))
 
