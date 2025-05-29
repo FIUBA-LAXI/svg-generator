@@ -1,0 +1,4 @@
+25 40
+X
+X F+[[XC]R-X]-F[-FXC]+XR
+F FF

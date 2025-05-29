@@ -29,35 +29,42 @@
 ;; Interpreta una cadena de comandos tipo L-system
 (defn interpretar [cadena angle-left angle-right]
   (loop [xs []
+         figuras []
          estado {:x 0.0 :y 0.0 :dir -90.0}
          pila []
          extremos {:min-x 0.0 :max-x 0.0 :min-y 0.0 :max-y 0.0}
          [c & cs] (seq cadena)]
     (if (nil? c)
-      {:lineas xs :extremos extremos}
+      {:lineas xs :extremos extremos :figuras figuras}
       (case c
         (\F \G)
         (let [{:keys [linea estado extremos]} (mover-tortuga estado extremos true)]
-          (recur (conj xs linea) estado pila extremos cs))
+          (recur (conj xs linea) figuras estado pila extremos cs))
 
         (\f \g)
         (let [{:keys [estado extremos]} (mover-tortuga estado extremos false)]
-          (recur xs estado pila extremos cs))
+          (recur xs figuras estado pila extremos cs))
 
         \+
-        (recur xs (update estado :dir #(+ % angle-right)) pila extremos cs)
+        (recur xs figuras (update estado :dir #(+ % angle-right)) pila extremos cs)
 
         \-
-        (recur xs (update estado :dir #(- % angle-left)) pila extremos cs)
+        (recur xs figuras (update estado :dir #(- % angle-left)) pila extremos cs)
 
         \|
-        (recur xs (update estado :dir #(+ % 180)) pila extremos cs)
+        (recur xs figuras (update estado :dir #(+ % 180)) pila extremos cs)
 
         \[
-        (recur xs estado (conj pila estado) extremos cs)
+        (recur xs figuras estado (conj pila estado) extremos cs)
 
         \]
-        (recur xs (peek pila) (pop pila) extremos cs)
+        (recur xs figuras (peek pila) (pop pila) extremos cs)
+
+        \C
+        (recur xs (conj figuras {:tipo :circulo :x (:x estado) :y (:y estado)}) estado pila extremos cs)
+
+        \R
+        (recur xs (conj figuras {:tipo :cuadrado :x (:x estado) :y (:y estado) :angulo (:dir estado)}) estado pila extremos cs)
 
         ;; Ignorar caracteres no reconocidos
-        (recur xs estado pila extremos cs)))))
+        (recur xs figuras estado pila extremos cs)))))

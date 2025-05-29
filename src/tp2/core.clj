@@ -98,4 +98,5 @@
                             (:lineas lineas)
                             extremos
                             grosor
-                            color)))))
+                            color
+                            (:figuras lineas))))))
