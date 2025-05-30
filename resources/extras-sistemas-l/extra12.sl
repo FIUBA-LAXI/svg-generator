@@ -1,0 +1,4 @@
+25 50
+X
+X FC+aR[R[X]-b11X2]-cF[-dFXC]+e3X1
+F FF
