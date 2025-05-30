@@ -16,21 +16,28 @@
 
 ;; Mueve la tortuga, con o sin trazo
 (defn mover-tortuga [estado extremos dibujar?]
-  (let [{:keys [x y dir]} estado
+  (let [{:keys [x y dir color grosor]} estado
         θ (deg->rad dir)
         x2 (+ x (* paso (Math/cos θ)))
         y2 (+ y (* paso (Math/sin θ)))
         nuevos-extremos (actualizar-extremos extremos x2 y2)
-        nuevo-estado {:x x2 :y y2 :dir dir}]
-    {:linea (when dibujar? [[x y] [x2 y2]])
-     :estado nuevo-estado
-     :extremos nuevos-extremos}))
+        nuevo-estado {:x x2 :y y2 :dir dir :color color :grosor grosor}]
+    (if dibujar?
+      {:linea {:inicio [x y]
+               :fin [x2 y2]
+               :color color
+               :grosor grosor}
+       :estado nuevo-estado
+       :extremos nuevos-extremos}
+      {:estado nuevo-estado
+       :extremos nuevos-extremos})))
 
-;; Interpreta una cadena de comandos tipo L-system
+
+    ;; Interpreta una cadena de comandos tipo L-system
 (defn interpretar [cadena angle-left angle-right]
   (loop [xs []
          figuras []
-         estado {:x 0.0 :y 0.0 :dir -90.0}
+         estado {:x 0.0 :y 0.0 :dir -90.0 :color "black" :grosor 1} ;;agrego color y grosor
          pila []
          extremos {:min-x 0.0 :max-x 0.0 :min-y 0.0 :max-y 0.0}
          [c & cs] (seq cadena)]
@@ -61,10 +68,20 @@
         (recur xs figuras (peek pila) (pop pila) extremos cs)
 
         \C
-        (recur xs (conj figuras {:tipo :circulo :x (:x estado) :y (:y estado)}) estado pila extremos cs)
+        (recur xs (conj figuras {:tipo :circulo :x (:x estado) :y (:y estado) :color (:color estado)}) estado pila extremos cs)
 
         \R
-        (recur xs (conj figuras {:tipo :cuadrado :x (:x estado) :y (:y estado) :angulo (:dir estado)}) estado pila extremos cs)
+        (recur xs (conj figuras {:tipo :cuadrado :x (:x estado) :y (:y estado) :color (:color estado) :angulo (:dir estado)}) estado pila extremos cs)
+
+        ;; cambiar color (ejemplos para a,b,c...)
+        \a (recur xs figuras (assoc estado :color "blue") pila extremos cs)
+        \b (recur xs figuras (assoc estado :color "red") pila extremos cs)
+        \d (recur xs figuras (assoc estado :color "green") pila extremos cs)
+
+        ;; cambiar grosor
+        \1 (recur xs figuras (assoc estado :grosor 1) pila extremos cs)
+        \2 (recur xs figuras (assoc estado :grosor 2) pila extremos cs)
+        \3 (recur xs figuras (assoc estado :grosor 3) pila extremos cs)
 
         ;; Ignorar caracteres no reconocidos
         (recur xs figuras estado pila extremos cs)))))

@@ -1,0 +1,4 @@
+25 4
+X
+X F+aF+bF+cF+dF+1F+2F+3F F FF
+C G
