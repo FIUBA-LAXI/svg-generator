@@ -7,7 +7,7 @@
         ang1 (Double/parseDouble (first parts))
         ang2 (if (> (count parts) 1)
                (Double/parseDouble (second parts))
-               ang1)] ; si no hay segundo ángulo, se usa el mismo
+               ang1)]
     {:angle-left ang1 :angle-right ang2}))
 
 (defn parse-system-l [lines]

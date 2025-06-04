@@ -14,7 +14,7 @@
    :min-y (min (:min-y ext) y)
    :max-y (max (:max-y ext) y)})
 
-;; Mueve la tortuga, con o sin trazo
+;; Mueve la tortuga
 (defn mover-tortuga [estado extremos dibujar?]
   (let [{:keys [x y dir color grosor]} estado
         θ (deg->rad dir)
@@ -33,11 +33,11 @@
        :extremos nuevos-extremos})))
 
 
-    ;; Interpreta una cadena de comandos tipo L-system
+;; Interpreta una cadena de comandos tipo L-system
 (defn interpretar [cadena angle-left angle-right]
   (loop [xs []
          figuras []
-         estado {:x 0.0 :y 0.0 :dir -90.0 :color "black" :grosor 1} ;;agrego color y grosor
+         estado {:x 0.0 :y 0.0 :dir -90.0 :color "black" :grosor 1}
          pila []
          extremos {:min-x 0.0 :max-x 0.0 :min-y 0.0 :max-y 0.0}
          [c & cs] (seq cadena)]
