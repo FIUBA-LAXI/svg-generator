@@ -35,7 +35,7 @@
                                         " L " (first fin) " " (second fin) " "))
                                  ls))]
                (str "<path d=\"" d "\" fill=\"none\" stroke=\"" (or color "black")
-                    "\" stroke-width=\"" (or grosor 1) "\" stroke-linecap=\"round\"/>\n"))))))
+                    "\" stroke-width=\"" (or grosor 1) "\" stroke-linecap=\"round\"/>"))))))
 
 (defn generate-svg [lineas extremos figuras]
   (let [padding-ratio 0.1
